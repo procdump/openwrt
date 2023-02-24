@@ -59,6 +59,11 @@ procd_lock() {
 	fi
 }
 
+procd_children_lock_release() {
+	# close descriptor id 1000
+	exec 1000>&-
+}
+
 _procd_call() {
 	local old_cb
 

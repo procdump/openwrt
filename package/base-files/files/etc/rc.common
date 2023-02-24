@@ -159,17 +159,17 @@ extra_command "enabled" "Check if service is started on boot"
 
 	stop() {
 		procd_lock
-		stop_service "$@"
+		(procd_children_lock_release; stop_service "$@")
 		procd_kill "$(basename ${basescript:-$initscript})" "$1"
 		if eval "type service_stopped" 2>/dev/null >/dev/null; then
-			service_stopped
+			(procd_children_lock_release; service_stopped)
 		fi
 	}
 
 	reload() {
 		if eval "type reload_service" 2>/dev/null >/dev/null; then
 			procd_lock
-			reload_service "$@"
+			(procd_children_lock_release; reload_service "$@")
 		else
 			start
 		fi
